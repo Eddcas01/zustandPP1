@@ -1,6 +1,7 @@
 import { WhiteCard } from '../../components';
-import { useBearStore } from '../../stores';
 import { useShallow } from 'zustand/react/shallow'
+import { useBearStorage } from '../../stores/bears/bears.storage';
+import { useBearStore } from '../../stores';
 export const BearPage = () => {
 
   return (
@@ -27,8 +28,8 @@ export const BearPage = () => {
 
 export const BlackBears = () => {
   
-const blacBears = useBearStore(state=> state.blackBears);
-const increaseBlackBears = useBearStore(state=> state.increaseBlackBears);
+const blacBears = useBearStorage (state=> state.blackBears);
+const increaseBlackBears = useBearStorage(state=> state.increaseBlackBears);
 
 
 
