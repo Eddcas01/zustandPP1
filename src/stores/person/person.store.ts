@@ -50,7 +50,7 @@ logger(
             storeAPI
             , {
                 name: 'PersonStorage',
-                storage: FirebaseStorage
+                // storage: FirebaseStorage
             })))
 );
 
