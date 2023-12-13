@@ -13,6 +13,7 @@ interface Actions{
     getTaskByStatus:(status: TaskStatus) => Task[];// metodo para obtener todas las tasks
     setDraggingTaskId:(taskId: string) => void; //metodo para obtener la tarea que se esta arrastrando
     removeDraggingTaskId:() => void; // metodo para volver a undefine el state
+    changeTaskStatus:(taskId:string, status: TaskStatus) => void; // metodo para actualizar el estado de una tarea
 
 }
 
@@ -51,6 +52,24 @@ setDraggingTaskId:(taskId:string) => {
 removeDraggingTaskId:() => { 
 
     return set({draggindTaskId:undefined}) //
+
+},
+
+changeTaskStatus:(taskId: string, status: TaskStatus)=>{
+
+    const task = get().tasks[taskId]
+    task.status = status;
+    set((state) =>({
+        
+        tasks:{
+
+            ...state.tasks,
+            [taskId]: task
+
+        }
+        
+    }))
+
 
 }
 
