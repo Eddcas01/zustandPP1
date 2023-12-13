@@ -14,6 +14,7 @@ interface Actions{
     setDraggingTaskId:(taskId: string) => void; //metodo para obtener la tarea que se esta arrastrando
     removeDraggingTaskId:() => void; // metodo para volver a undefine el state
     changeTaskStatus:(taskId:string, status: TaskStatus) => void; // metodo para actualizar el estado de una tarea
+    onTaskDrop:(status:TaskStatus) => void; // metodo para obtener el estado de la tarea 
 
 }
 
@@ -71,6 +72,16 @@ changeTaskStatus:(taskId: string, status: TaskStatus)=>{
     }))
 
 
+},
+
+onTaskDrop:(status:TaskStatus)=>{
+
+    const taskId = get().draggindTaskId
+
+    if(!taskId) return;
+
+    get().changeTaskStatus(taskId, status);
+    get().removeDraggingTaskId()
 }
 
 })

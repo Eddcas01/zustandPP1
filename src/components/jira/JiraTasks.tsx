@@ -17,10 +17,13 @@ interface Props {
 export const JiraTasks = ({ title, value, tasks }: Props) => {
 
   const isDragging = useTaskstore(state => !!state.draggindTaskId);
-  const changeTaskStatus = useTaskstore(state => state.changeTaskStatus); //funcion para cambiar el estado de la tarea que se esta moviendo
+  const onTaskDrop = useTaskstore(state => state.onTaskDrop); //funcion para cambiar el estado de la tarea que se esta moviendo
+
+
+
   const [onDraggOver, setOnDraggOver] = useState(false)
  
-  const taskidGraggin = useTaskstore(state => state.draggindTaskId);
+
   
 
   const handleDraggOver = (event: DragEvent<HTMLDivElement>) => {
@@ -39,7 +42,7 @@ export const JiraTasks = ({ title, value, tasks }: Props) => {
     event.preventDefault();
     console.log("grop", value);
     setOnDraggOver(false);
-    changeTaskStatus(taskidGraggin!, value);
+    onTaskDrop( value);
   };
   return (
     <div
