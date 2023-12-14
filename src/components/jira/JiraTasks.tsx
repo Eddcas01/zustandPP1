@@ -2,33 +2,66 @@ import { DragEvent, useState } from "react";
 import { Task, TaskStatus } from "../../interfaces";
 import { SingleTask } from "./SingleTask";
 import {
+  IoAddOutline,
   IoCheckmarkCircleOutline,
-  IoEllipsisHorizontalOutline,
+  
 } from "react-icons/io5";
 import { useTaskstore } from "../../stores";
 import classNames from "classnames";
+import Swal from "sweetalert2";
+
+
 
 interface Props {
   title: string;
   tasks: Task[];
-  value: TaskStatus;
+  status: TaskStatus;
 }
 
-export const JiraTasks = ({ title, value, tasks }: Props) => {
+export const JiraTasks = ({ title, status, tasks }: Props) => {
 
   const isDragging = useTaskstore(state => !!state.draggindTaskId);
   const onTaskDrop = useTaskstore(state => state.onTaskDrop); //funcion para cambiar el estado de la tarea que se esta moviendo
+  const addTask = useTaskstore(state =>state.addTask); //funcion para anadir una nueva tarea
 
 
 
   const [onDraggOver, setOnDraggOver] = useState(false)
  
+const handleAddTask = async() =>{
 
+  const {isConfirmed, value} = await Swal.fire({
+    title: 'Add Task',
+    input: 'text',
+    inputLabel:'',
+    inputPlaceholder: 'Add Task',
+    showCancelButton: true,
+    inputValidator:(value:string)=>{
+
+      if(!value){
+
+        return "ingrese una tarea"
+      }
+
+
+    }
+
+    
+ 
+
+
+  })
+
+  if(!isConfirmed) return
+  addTask(value,status);
+
+  // addTask("Titulo nuevo", value )
+}
   
 
   const handleDraggOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log("draggOver", value);
+    console.log("draggOver", status);
     setOnDraggOver(true); 
   };
 
@@ -40,9 +73,9 @@ export const JiraTasks = ({ title, value, tasks }: Props) => {
 
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log("grop", value);
+    console.log("grop", status);
     setOnDraggOver(false);
-    onTaskDrop( value);
+    onTaskDrop( status);
   };
   return (
     <div
@@ -69,8 +102,8 @@ export const JiraTasks = ({ title, value, tasks }: Props) => {
           <h4 className="ml-4 text-xl font-bold text-navy-700">{title}</h4>
         </div>
 
-        <button>
-          <IoEllipsisHorizontalOutline />
+        <button title="Add" onClick={handleAddTask}>
+          <IoAddOutline />
         </button>
       </div>
 

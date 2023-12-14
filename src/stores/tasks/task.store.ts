@@ -1,6 +1,7 @@
 import { StateCreator, create } from "zustand";
 import type { Task, TaskStatus } from "../../interfaces";
 import { devtools } from "zustand/middleware";
+import {v4 as uuidv4} from "uuid"
 
 interface TaskState {
   draggindTaskId?: string; // propiedad task id
@@ -15,6 +16,7 @@ interface Actions{
     removeDraggingTaskId:() => void; // metodo para volver a undefine el state
     changeTaskStatus:(taskId:string, status: TaskStatus) => void; // metodo para actualizar el estado de una tarea
     onTaskDrop:(status:TaskStatus) => void; // metodo para obtener el estado de la tarea 
+    addTask:(title:string, status:TaskStatus) => void; // metodo para agregar una nueva tarea
 
 }
 
@@ -43,7 +45,26 @@ return Object.values(tasks).filter(task => task.status === status)
     
 
 },
+addTask:(title:string , status:TaskStatus) =>{
 
+
+const newTask = {id:uuidv4(),title,status}
+
+//seteando una nueva tarea    
+set(state =>({
+//se implementa npm uuid para id de tareas
+    tasks:{
+
+        //apunta a la nueva tarea
+        ...state.tasks,
+        [newTask.id]: newTask
+    }
+
+}))
+
+
+
+},
 setDraggingTaskId:(taskId:string) => {
 
     set({draggindTaskId:taskId}) //igualando el task id al id obtenido
