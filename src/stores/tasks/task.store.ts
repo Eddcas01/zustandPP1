@@ -2,7 +2,7 @@ import { StateCreator, create } from "zustand";
 import type { Task, TaskStatus } from "../../interfaces";
 import { devtools } from "zustand/middleware";
 import {v4 as uuidv4} from "uuid"
-
+import { produce } from "immer";
 interface TaskState {
   draggindTaskId?: string; // propiedad task id
     tasks: Record<string, Task> //record es el que maneja el id del task
@@ -51,17 +51,32 @@ addTask:(title:string , status:TaskStatus) =>{
 const newTask = {id:uuidv4(),title,status}
 
 //seteando una nueva tarea    
-set(state =>({
-//se implementa npm uuid para id de tareas
-    tasks:{
 
-        //apunta a la nueva tarea
-        ...state.tasks,
-        [newTask.id]: newTask
-    }
+//mutando con immer package
+set(produce( (state:TaskState) =>{
 
-}))
+    state.tasks[newTask.id] = newTask
 
+}
+
+
+))
+
+
+
+
+
+// set(state =>({
+//     //se implementa npm uuid para id de tareas
+//         tasks:{
+    
+//             //apunta a la nueva tarea
+//             ...state.tasks,
+//             [newTask.id]: newTask
+//         }
+    
+//     }))
+    
 
 
 },
