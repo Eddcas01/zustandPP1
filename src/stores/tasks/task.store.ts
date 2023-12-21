@@ -2,7 +2,8 @@ import { StateCreator, create } from "zustand";
 import type { Task, TaskStatus } from "../../interfaces";
 import { devtools } from "zustand/middleware";
 import {v4 as uuidv4} from "uuid"
-import { produce } from "immer";
+// import { produce } from "immer";
+import { immer } from "zustand/middleware/immer";
 interface TaskState {
   draggindTaskId?: string; // propiedad task id
     tasks: Record<string, Task> //record es el que maneja el id del task
@@ -20,7 +21,7 @@ interface Actions{
 
 }
 
-const storeAPI: StateCreator<TaskState & Actions> = (set,get)  => ({
+const storeAPI: StateCreator<TaskState & Actions,[["zustand/immer", never]]> = (set,get)  => ({
 //se utiliza un objeto para que a la hora de actualizar sea mucho mas facil y no se tenga que barrer todo el objeto
 tasks:{
     
@@ -49,23 +50,33 @@ addTask:(title:string , status:TaskStatus) =>{
 
 
 const newTask = {id:uuidv4(),title,status}
+//para evitar errores de tipado esto se puede encontrar en el cursor sobre el imer en el exporte de esta store
+//["zustand/immer", never] va en el tipo del creator
 
-//seteando una nueva tarea    
 
-//mutando con immer package
-set(produce( (state:TaskState) =>{
+set( state =>{
 
     state.tasks[newTask.id] = newTask
 
-}
-
-
-))
+})
 
 
 
 
+// //mutando con immer package
+// set(produce( (state:TaskState) =>{
 
+//     state.tasks[newTask.id] = newTask
+
+// }
+
+
+// ))
+
+
+
+
+//fomra nativa de zustand
 // set(state =>({
 //     //se implementa npm uuid para id de tareas
 //         tasks:{
@@ -96,17 +107,28 @@ changeTaskStatus:(taskId: string, status: TaskStatus)=>{
 
     const task = get().tasks[taskId]
     task.status = status;
-    set((state) =>({
-        
-        tasks:{
+    set( state => {
 
-            ...state.tasks,
-            [taskId]: task
+        state.tasks[taskId] = {
+            ...state.tasks[taskId],status,
 
         }
-        
-    }))
 
+
+
+    })
+
+
+    // set((state) =>({
+        
+    //     tasks:{
+
+    //         ...state.tasks,
+    //         [taskId]: task
+
+    //     }
+        
+    // }))
 
 },
 
@@ -126,7 +148,8 @@ onTaskDrop:(status:TaskStatus)=>{
 export const useTaskstore = create<TaskState&Actions>()(
     
     devtools(
-    storeAPI
+    
+    immer(storeAPI)
     
     )
     
