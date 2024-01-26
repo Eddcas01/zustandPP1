@@ -3,21 +3,22 @@
 //definicion de la interfaz
 
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
-import { CustomsessionStorage } from "../storages/sessionStorage";
+import { devtools, persist } from "zustand/middleware";
+import { FirebaseStorage } from "../storages/FireBaseSessionStorage";
+import { logger } from "../middlewares/logger.middleware";
 
 interface PersonState {
 
     firstname: string;
     lastname: string;
 
-//metodos del objeto, estos metodos no deben estar en el state
-    
+    //metodos del objeto, estos metodos no deben estar en el state
+
 }
 //interfaz de acciones
 interface Actions {
-    setFirstname : (value:string) => void;
-    setLastname : (value:string) => void;
+    setFirstname: (value: string) => void;
+    setLastname: (value: string) => void;
 
 
 
@@ -25,27 +26,31 @@ interface Actions {
 
 // type PersonStore = PersonState & Actions;
 
-const storeAPI : StateCreator <PersonState & Actions>  =  (set) => ({
+//la store segun el type debe tener 2 strings y 2 metodos segun el typo
+
+const storeAPI: StateCreator<PersonState & Actions, [["zustand/devtools", never]]> = (set) => ({
 
     firstname: '',
     lastname: '',
-    
-    setFirstname : (value:string) => set(state => ({ firstname:value})),
-    setLastname : (value:string) => set(state => ({ lastname:value}))
-    
-    
-    })
+    //el state se deja debido a 
+    setFirstname: (value: string) => set(({ firstname: value }), false, 'SetFirstName'),
+    setLastname: (value: string) => set(({ lastname: value }), false, 'setLastName')
+
+
+})
 
 
 //store 
-                                //tipos
+//tipos
 export const UsePersonStore = create<PersonState & Actions>()(
-
-    //persiste genera un storage de las accines en el, esto es un middleware
-    persist(
-        storeAPI
-  , {name:'PersonStorage',
-        storage: CustomsessionStorage
-} )
+logger(
+    devtools(
+        //persiste genera un storage de las accines en el, esto es un middleware
+        persist(
+            storeAPI
+            , {
+                name: 'PersonStorage',
+                // storage: FirebaseStorage
+            })))
 );
 

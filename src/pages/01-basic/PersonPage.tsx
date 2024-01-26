@@ -38,6 +38,7 @@ export const PersonPage = () => {
                     placeholder="Primer Nombre"
                     value={firstname}
                     onChange={e => setFirst(e.target.value)}
+                    // aqui estamos pasando todo el value que va al store en el metodo setfirstname, luego este va al storage y por ultimo al fetch put hacia firebase
                   />
                 </div>
               </div>

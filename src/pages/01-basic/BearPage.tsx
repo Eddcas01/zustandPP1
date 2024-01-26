@@ -1,6 +1,7 @@
 import { WhiteCard } from '../../components';
-import { useBearStore } from '../../stores';
 import { useShallow } from 'zustand/react/shallow'
+import { useBearStorage } from '../../stores/bears/bears.storage';
+// import { useBearStore } from '../../stores';
 export const BearPage = () => {
 
   return (
@@ -27,8 +28,8 @@ export const BearPage = () => {
 
 export const BlackBears = () => {
   
-const blacBears = useBearStore(state=> state.blackBears);
-const increaseBlackBears = useBearStore(state=> state.increaseBlackBears);
+const blacBears = useBearStorage (state=> state.blackBears);
+const increaseBlackBears = useBearStorage(state=> state.increaseBlackBears);
 
 
 
@@ -50,8 +51,8 @@ const increaseBlackBears = useBearStore(state=> state.increaseBlackBears);
 
 
 export const PolarBears = () => {
-  const polarBears = useBearStore(state=> state.polarBears);
-const increasePolarBears = useBearStore(state=> state.increasePolarBears)
+  const polarBears = useBearStorage(state=> state.polarBears);
+const increasePolarBears = useBearStorage(state=> state.increasePolarBears)
 
   return (
     <WhiteCard centered>
@@ -70,8 +71,8 @@ const increasePolarBears = useBearStore(state=> state.increasePolarBears)
 }
 
 export const PandaBears = () => {
-  const pandaBears = useBearStore(state=> state.pandaBears);
-const increasePandaBears = useBearStore(state=> state.increasePandaBears)
+  const pandaBears = useBearStorage(state=> state.pandaBears);
+const increasePandaBears = useBearStorage(state=> state.increasePandaBears)
 
   return (
     <WhiteCard centered>
@@ -97,11 +98,11 @@ const increasePandaBears = useBearStore(state=> state.increasePandaBears)
 
 export const BearDisplay = () => {
 
-  const bears = useBearStore(  useShallow(state => state.bears));
+  const bears = useBearStorage(  useShallow(state => state.bears));
 
-const donothing = useBearStore(state => state.doNothing)
-const addbear = useBearStore(state => state.addBears)
-const clearbear = useBearStore(state => state.clearBears)
+const donothing = useBearStorage(state => state.doNothing)
+const addbear = useBearStorage(state => state.addBears)
+const clearbear = useBearStorage(state => state.clearBears)
   return (
  <WhiteCard>
 <h1>Osos</h1>
